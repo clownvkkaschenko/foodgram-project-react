@@ -1,25 +1,21 @@
 """Файл для проектирования и описания моделей приложения 'recipes' для ORM.
 
 Модели:
-    - Ingredient:
-        Модель для описания ингредиентов.
-    - Tag:
-        Модель тегов для рецептов.
-    - Recipe:
-        Основная модель приложения, для создания и описания рецептов.
-    - QuantityOfIngredients:
-        Промежуточная модель количества ингредиентов в блюде.
-    - Subscription:
-        Модель подписки на пользователей.
+    - Ingredient(line-27):
+            Модель для описания ингредиентов.
+    - Tag(line-44):
+            Модель тегов для рецептов.
+    - Recipe(line-66):
+            Основная модель приложения, для создания и описания рецептов.
+    - QuantityOfIngredients(line-118):
+            Промежуточная модель количества ингредиентов в блюде.
 """
-
-from django.contrib.auth import get_user_model
+from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
+from users.models import CustomUser
 
-User = get_user_model()
-
-MAX_LENGTH_HEX_CODE = 6
+MAX_LENGTH_HEX_CODE = 7
 MAX_LENGTH_CHARFIELD = 256
 MAX_LENGTH_TEXTFIELD = 2000
 MIN_VALUE_INTEGERFIELD = 1
@@ -35,11 +31,12 @@ class Ingredient(models.Model):
     )
 
     class Meta:
+        ordering = ('name',)
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
     def __str__(self):
-        return self.name
+        return f'{self.name}({self.measurement_unit})'
 
 
 class Tag(models.Model):
@@ -48,19 +45,28 @@ class Tag(models.Model):
         max_length=MAX_LENGTH_CHARFIELD, unique=True,
         verbose_name='Название тега'
     )
-    color_code = models.CharField(
-        max_length=MAX_LENGTH_HEX_CODE, unique=True, verbose_name='Цвет тега'
+    color_code = ColorField(
+        max_length=MAX_LENGTH_HEX_CODE, unique=True,
+        default='#000000', verbose_name='Цвет тега'
     )
     slug = models.SlugField(
         max_length=MAX_LENGTH_CHARFIELD, unique=True,
         verbose_name='Адрес тега'
     )
 
+    class Meta:
+        ordering = ('name',)
+        verbose_name = 'Тег'
+        verbose_name_plural = 'Теги'
+
+    def __str__(self):
+        return self.name
+
 
 class Recipe(models.Model):
     """Модель создания рецептов."""
     author = models.ForeignKey(
-        User, on_delete=models.CASCADE,
+        CustomUser, on_delete=models.CASCADE,
         related_name='recipes', verbose_name='Автор публикации'
     )
     name = models.CharField(
@@ -89,11 +95,11 @@ class Recipe(models.Model):
         ]
     )
     favorite = models.ManyToManyField(
-        User, related_name='favorites_recipes',
+        CustomUser, related_name='favorites_recipes',
         verbose_name='Избранные рецепты'
     )
     purchase = models.ManyToManyField(
-        User, related_name='purchases',
+        CustomUser, related_name='purchases',
         verbose_name='Список покупок'
     )
     pub_date = models.DateTimeField(
@@ -102,6 +108,7 @@ class Recipe(models.Model):
     )
 
     class Meta:
+        ordering = ('name',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -136,36 +143,13 @@ class QuantityOfIngredients(models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=('ingredient', 'recipe'), name='unique_object'
+                fields=('ingredient', 'recipe'),
+                name='%(app_label)s_%(class)s_unique_ingredient'
             )
         ]
+        ordering = ('ingredient',)
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Количество ингридиентов'
 
     def __str__(self):
-        return self.name
-
-
-class Subscription(models.Model):
-    """Модель подписки на пользователей."""
-    user = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        related_name='followers', verbose_name='Подписчик'
-    )
-    author = models.ForeignKey(
-        User, on_delete=models.CASCADE,
-        related_name='following',
-        verbose_name='Автор на которого подписываются'
-    )
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=('user', 'author'), name='unique_object'
-            )
-        ]
-        verbose_name = 'Подписка'
-        verbose_name_plural = 'Подписки'
-
-        def __str__(self):
-            return self.name
+        return f'{self.ingredient} - {self.amount}шт. для {self.recipe}'
