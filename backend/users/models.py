@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from foodgram.constant import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_EMAILFIELD,
+                               MAX_LENGTH_ROLE_USER)
 
 
 class CustomUser(AbstractUser):
@@ -11,28 +13,28 @@ class CustomUser(AbstractUser):
     ]
     username_validator = AbstractUser.username_validator
     username = models.CharField(
-        max_length=150,
+        max_length=MAX_LENGTH_CHARFIELD,
         unique=True,
         validators=[username_validator],
         verbose_name='Логин',
     )
     email = models.EmailField(
-        max_length=254,
+        max_length=MAX_LENGTH_EMAILFIELD,
         unique=True,
         verbose_name='Электронная почта'
     )
     role = models.CharField(
-        max_length=6,
+        max_length=MAX_LENGTH_ROLE_USER,
         choices=ROLES,
         default=USER,
         verbose_name='Роль пользователя',
     )
     first_name = models.CharField(
-        max_length=150,
+        max_length=MAX_LENGTH_CHARFIELD,
         verbose_name='Имя'
     )
     last_name = models.CharField(
-        max_length=150,
+        max_length=MAX_LENGTH_CHARFIELD,
         verbose_name='Фамилия'
     )
     subscriber = models.ManyToManyField(
@@ -41,17 +43,8 @@ class CustomUser(AbstractUser):
     )
 
     class Meta:
-        ordering = ('username',)
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
 
     def __str__(self):
         return self.username
-
-    @property
-    def is_admin(self):
-        return self.role == CustomUser.ADMIN or self.is_superuser
-
-    @property
-    def is_user(self):
-        return self.role == CustomUser.USER

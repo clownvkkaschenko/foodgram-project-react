@@ -1,24 +1,21 @@
 """Файл для проектирования и описания моделей приложения 'recipes' для ORM.
 
 Модели:
-    - Ingredient(line-27):
+    - Ingredient(line-21):
             Модель для описания ингредиентов.
-    - Tag(line-44):
+    - Tag(line-38):
             Модель тегов для рецептов.
-    - Recipe(line-66):
+    - Recipe(line-61):
             Основная модель приложения, для создания и описания рецептов.
-    - QuantityOfIngredients(line-118):
+    - QuantityOfIngredients(line-113):
             Промежуточная модель количества ингредиентов в блюде.
 """
 from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
+from foodgram.constant import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_HEX_CODE,
+                               MAX_LENGTH_TEXTFIELD, MIN_VALUE_INTEGERFIELD)
 from users.models import CustomUser
-
-MAX_LENGTH_HEX_CODE = 7
-MAX_LENGTH_CHARFIELD = 256
-MAX_LENGTH_TEXTFIELD = 2000
-MIN_VALUE_INTEGERFIELD = 1
 
 
 class Ingredient(models.Model):
@@ -31,7 +28,6 @@ class Ingredient(models.Model):
     )
 
     class Meta:
-        ordering = ('name',)
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
@@ -55,7 +51,6 @@ class Tag(models.Model):
     )
 
     class Meta:
-        ordering = ('name',)
         verbose_name = 'Тег'
         verbose_name_plural = 'Теги'
 
@@ -108,7 +103,6 @@ class Recipe(models.Model):
     )
 
     class Meta:
-        ordering = ('name',)
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 
@@ -147,7 +141,6 @@ class QuantityOfIngredients(models.Model):
                 name='%(app_label)s_%(class)s_unique_ingredient'
             )
         ]
-        ordering = ('ingredient',)
         verbose_name = 'Ингридиент'
         verbose_name_plural = 'Количество ингридиентов'
 

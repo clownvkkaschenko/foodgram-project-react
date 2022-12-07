@@ -7,24 +7,29 @@ from .models import CustomUser
 @register(CustomUser)
 class CustomUserAdmin(UserAdmin):
     model = CustomUser
-    list_display = ('id', 'username', 'first_name', 'last_name', 'role')
+    list_display = ('username', 'full_name', 'role', 'is_staff')
     fields = (
-        ('username', 'email'), ('first_name', 'last_name'), 'role'
+        ('username', 'email'), ('first_name', 'last_name'),
+        'role', 'password', 'is_staff', 'is_active', 'date_joined'
     )
     add_fieldsets = (
         *UserAdmin.add_fieldsets,
-        (
-            'Custom fields',
-            {
-                'fields': (
-                    'first_name',
-                    'last_name',
-                    'email'
-                )
-            }
-        )
+        ('Регистрация',
+            {'fields': (
+                'first_name',
+                'last_name',
+                'email',
+                'role'
+            )}
+         )
     )
     fieldsets = []
     search_fields = ('username',)
     list_filter = ('username', 'email')
     empty_value_display = '-пусто-'
+    ordering = ('username',)
+
+    def full_name(self, obj):
+        full_name = '%s %s' % (obj.first_name, obj.last_name)
+        return full_name.strip()
+    full_name.short_description = 'Имя пользователя'
