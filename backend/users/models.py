@@ -11,13 +11,6 @@ class CustomUser(AbstractUser):
         (USER, 'user'),
         (ADMIN, 'admin'),
     ]
-    username_validator = AbstractUser.username_validator
-    username = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD,
-        unique=True,
-        validators=[username_validator],
-        verbose_name='Логин',
-    )
     email = models.EmailField(
         max_length=MAX_LENGTH_EMAILFIELD,
         unique=True,
