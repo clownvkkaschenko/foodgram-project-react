@@ -1,3 +1,9 @@
+"""Management команда для загрузки ингридиентов в БД из csv файла.
+
+По команде «python manage.py load_csv» загружает в БД названия и
+единицы измерения ингредиентов, для модели «Ingredient», из
+подготовленного csv файла.
+"""
 import csv
 import logging
 import os
@@ -15,11 +21,11 @@ models = {
 
 
 class Command(BaseCommand):
-    help = 'Загружаем данные в бд из csv'
+    help = 'Загружаем данные в БД из csv'
 
     def handle(self, *args, **options):
         for csv_key, model in models.items():
-            file = os.path.join(settings.BASE_DIR, f"data/{csv_key}")
+            file = os.path.join(settings.BASE_DIR, f'data/{csv_key}')
             with open(file, encoding='utf-8') as f:
                 reader = csv.DictReader(f)
                 try:

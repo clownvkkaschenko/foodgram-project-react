@@ -3,11 +3,11 @@
 Модели:
     - Ingredient(line-21):
             Модель для описания ингредиентов.
-    - Tag(line-38):
+    - Tag(line-44):
             Модель тегов для рецептов.
-    - Recipe(line-61):
+    - Recipe(line-67):
             Основная модель приложения, для создания и описания рецептов.
-    - QuantityOfIngredients(line-113):
+    - QuantityOfIngredients(line-125):
             Промежуточная модель количества ингредиентов в блюде.
 """
 from colorfield.fields import ColorField
@@ -28,6 +28,12 @@ class Ingredient(models.Model):
     )
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('name', 'measurement_unit'),
+                name='%(app_label)s_%(class)s_unique_object'
+            )
+        ]
         verbose_name = 'Ингредиент'
         verbose_name_plural = 'Ингредиенты'
 
@@ -103,6 +109,12 @@ class Recipe(models.Model):
     )
 
     class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=('author', 'name'),
+                name='%(app_label)s_%(class)s_unique_recipe_name'
+            )
+        ]
         verbose_name = 'Рецепт'
         verbose_name_plural = 'Рецепты'
 

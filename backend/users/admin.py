@@ -6,7 +6,6 @@ from .models import CustomUser
 
 @register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    model = CustomUser
     list_display = ('username', 'full_name', 'role', 'is_staff')
     fields = (
         ('username', 'email'), ('first_name', 'last_name'),
@@ -26,8 +25,8 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = []
     search_fields = ('username',)
     list_filter = ('username', 'email')
-    empty_value_display = '-пусто-'
     ordering = ('username',)
+    empty_value_display = '-пусто-'
 
     def full_name(self, obj):
         full_name = '%s %s' % (obj.first_name, obj.last_name)
