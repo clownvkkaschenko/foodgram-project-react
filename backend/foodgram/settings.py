@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,11 +21,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sorl.thumbnail',
+    'colorfield',
+    'rest_framework',
+    'djoser',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
-    'api.apps.ApiConfig',
-    'sorl.thumbnail',
-    'colorfield'
+    'api.apps.ApiConfig'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +85,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 
 LANGUAGE_CODE = 'en-us'
@@ -95,6 +97,27 @@ USE_L10N = True
 
 USE_TZ = True
 
+
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+# Пагинация
+REST_FRAMEWORK = {
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 10,
+
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ]
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=10),
+    'AUTH_HEADER_TYPES': ('Token',),
+}
 
 # Users
 AUTH_USER_MODEL = 'users.CustomUser'

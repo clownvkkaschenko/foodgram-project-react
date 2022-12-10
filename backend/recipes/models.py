@@ -47,7 +47,7 @@ class Tag(models.Model):
         max_length=MAX_LENGTH_CHARFIELD, unique=True,
         verbose_name='Название тега'
     )
-    color_code = ColorField(
+    color = ColorField(
         max_length=MAX_LENGTH_HEX_CODE, unique=True,
         default='#000000', verbose_name='Цвет тега'
     )
