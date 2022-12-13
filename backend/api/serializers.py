@@ -4,6 +4,31 @@ from rest_framework import serializers
 from users.models import CustomUser
 
 
+class CustomUserSerializer(serializers.ModelSerializer):
+    is_subscribed = serializers.SerializerMethodField()
+
+    class Meta:
+        model = CustomUser
+        fields = (
+            'email', 'id', 'username', 'first_name',
+            'last_name', 'is_subscribed')
+
+    def get_is_subscribed(self, obj):
+        user = self.context.get('request').user
+        if user.is_anonymous or user == obj:
+            return False
+        return user.subscriber.filter(id=obj.id).exists()
+
+
+class CustomUserRegistrationSerializer(UserCreateSerializer):
+
+    class Meta(UserCreateSerializer.Meta):
+        model = CustomUser
+        fields = (
+            'email', 'id', 'username', 'first_name',
+            'last_name', 'password')
+
+
 class TagSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -20,48 +45,18 @@ class IngredientSerializer(serializers.ModelSerializer):
 
 class QuantityOfIngredientsSerializer(serializers.ModelSerializer):
     id = serializers.StringRelatedField(
-        source='ingredient.id',
-        read_only=True
+        source='ingredient.id', read_only=True
     )
     name = serializers.StringRelatedField(
-        source='ingredient.name',
-        read_only=True
+        source='ingredient.name', read_only=True
     )
     measurement_unit = serializers.StringRelatedField(
-        source='ingredient.measurement_unit',
-        read_only=True
+        source='ingredient.measurement_unit', read_only=True
     )
 
     class Meta:
         model = QuantityOfIngredients
         fields = ('id', 'name', 'measurement_unit', 'amount')
-
-
-class CustomUserSerializer(serializers.ModelSerializer):
-    is_subscribed = serializers.SerializerMethodField()
-
-    def get_is_subscribed(self, obj):
-        user = self.context.get('request').user
-        if user.is_anonymous or user == obj:
-            return False
-        return user.subscriber.filter(id=obj.id).exists()
-
-    class Meta:
-        model = CustomUser
-        fields = (
-            'email', 'id', 'username', 'first_name',
-            'last_name', 'is_subscribed'
-        )
-
-
-class CustomUserRegistrationSerializer(UserCreateSerializer):
-
-    class Meta(UserCreateSerializer.Meta):
-        model = CustomUser
-        fields = (
-            'email', 'id', 'username', 'first_name',
-            'last_name', 'password'
-        )
 
 
 class RecipeSerializer(serializers.ModelSerializer):
@@ -71,6 +66,13 @@ class RecipeSerializer(serializers.ModelSerializer):
     text = serializers.StringRelatedField(source='description', read_only=True)
     is_favorited = serializers.SerializerMethodField()
     is_in_shopping_cart = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id', 'tags', 'author', 'ingredients', 'is_favorited',
+            'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
+        )
 
     def get_is_favorited(self, obj):
         user = self.context.get('request').user
@@ -83,10 +85,3 @@ class RecipeSerializer(serializers.ModelSerializer):
         if user.is_anonymous:
             return False
         return user.purchases.filter(id=obj.id).exists()
-
-    class Meta:
-        model = Recipe
-        fields = (
-            'id', 'tags', 'author', 'ingredients', 'is_favorited',
-            'is_in_shopping_cart', 'name', 'image', 'text', 'cooking_time'
-        )

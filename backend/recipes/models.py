@@ -1,30 +1,34 @@
-"""Файл для проектирования и описания моделей приложения 'recipes' для ORM.
+"""Файл для проектирования и описания моделей приложения «recipes» для ORM.
 
 Модели:
-    - Ingredient(line-21):
-            Модель для описания ингредиентов.
-    - Tag(line-44):
-            Модель тегов для рецептов.
-    - Recipe(line-67):
-            Основная модель приложения, для создания и описания рецептов.
-    - QuantityOfIngredients(line-125):
-            Промежуточная модель количества ингредиентов в блюде.
+  - Ingredient(строка-19): Модель ингредиентов и их единицы измерения.
+  - Tag(строка-48): Модель тегов для рецептов.
+  - Recipe(строка-67): Основная модель приложения, для создания и
+                       описания рецептов.
+  - QuantityOfIngredients(строка-125): Промежуточная модель количества
+                                       ингредиентов в блюде.
 """
 from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
-from foodgram.constant import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_HEX_CODE,
-                               MAX_LENGTH_TEXTFIELD, MIN_VALUE_INTEGERFIELD)
+from foodgram.constants import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_HEX_CODE,
+                                MAX_LENGTH_TEXTFIELD, MIN_VALUE_INTEGERFIELD)
 from users.models import CustomUser
 
 
 class Ingredient(models.Model):
-    """Ингридиенты для рецептов."""
+    """Модель ингридиентов и их единиц измерений.
+
+    Поля модели(являются обязательными):
+      - name: название ингридиента
+      - measurement_unit: единица измерения ингридиента
+    """
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD, verbose_name='Название продукта'
     )
     measurement_unit = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD, verbose_name='Единица измерения'
+        max_length=MAX_LENGTH_CHARFIELD,
+        verbose_name='Единица измерения продукта'
     )
 
     class Meta:
@@ -42,7 +46,13 @@ class Ingredient(models.Model):
 
 
 class Tag(models.Model):
-    """Теги для рецептов."""
+    """Модель тегов для рецептов.
+
+    Поля модели(являются обязательными):
+      - name: название тега
+      - color: цвет тега
+      - slug: уникальный фрагмент URL-адреса для тега
+    """
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD, unique=True,
         verbose_name='Название тега'
@@ -53,7 +63,7 @@ class Tag(models.Model):
     )
     slug = models.SlugField(
         max_length=MAX_LENGTH_CHARFIELD, unique=True,
-        verbose_name='Адрес тега'
+        verbose_name='URL-адрес тега'
     )
 
     class Meta:
@@ -65,7 +75,21 @@ class Tag(models.Model):
 
 
 class Recipe(models.Model):
-    """Модель создания рецептов."""
+    """Основная модель приложения, для создания и описания рецептов.
+
+    Поля модели(являются обязательными):
+      - author(1:М с моделью «CustomUser»): автор рецепта
+      - name: название блюда
+      - image: фото блюда
+      - description: описание рецепта
+      - ingredient(M2M с моделью «Ingredient»): продукты для приготовления
+                                                блюда
+      - tag(M2M с моделью «Tag»): теги рецепта
+      - cooking_time: время готовки блюда(в минутах)
+      - favorite(M2M с моделью «CustomUser»): избранные рецепты
+      - purchase(M2M с моделью «CustomUser»): список покупок для
+                                              выбранных рецептов
+    """
     author = models.ForeignKey(
         CustomUser, on_delete=models.CASCADE,
         related_name='recipes', verbose_name='Автор публикации'
@@ -77,17 +101,18 @@ class Recipe(models.Model):
         upload_to='recipes/', verbose_name='Фотография блюда'
     )
     description = models.TextField(
-        max_length=MAX_LENGTH_TEXTFIELD, verbose_name='Текстовое описание'
+        max_length=MAX_LENGTH_TEXTFIELD,
+        verbose_name='Текстовое описание рецепта'
     )
     ingredient = models.ManyToManyField(
         Ingredient, through='QuantityOfIngredients',
-        related_name='recipes', verbose_name='Ингредиенты'
+        related_name='recipes', verbose_name='Ингредиенты для блюда'
     )
     tag = models.ManyToManyField(
         Tag, related_name='recipes', verbose_name='Теги'
     )
     cooking_time = models.PositiveSmallIntegerField(
-        verbose_name='Время приготовления(в минутах)',
+        verbose_name='Время приготовления блюда(в минутах)',
         validators=[
             MinValueValidator(
                 MIN_VALUE_INTEGERFIELD,
@@ -102,10 +127,6 @@ class Recipe(models.Model):
     purchase = models.ManyToManyField(
         CustomUser, related_name='purchases',
         verbose_name='Список покупок'
-    )
-    pub_date = models.DateTimeField(
-        auto_now_add=True, db_index=True,
-        verbose_name='Дата публикации'
     )
 
     class Meta:
@@ -127,6 +148,10 @@ class QuantityOfIngredients(models.Model):
 
     Имеет отношение «one-to-many» с моделями «Ingredient» и «Recipe».
     И определяет одно дополнительное поле «amount».
+    Поля модели:
+      - ingredient(1:M с моделью «Ingredient»): ингридиенты для блюда
+      - recipe(1:M с моделью «Recipe»): рецепт блюда
+      - amount: количество ингридиентов в блюде
     """
     ingredient = models.ForeignKey(
         Ingredient, on_delete=models.CASCADE,

@@ -6,7 +6,7 @@ from .models import CustomUser
 
 @register(CustomUser)
 class CustomUserAdmin(UserAdmin):
-    list_display = ('username', 'full_name', 'role', 'is_staff')
+    list_display = ('username', 'full_name_user', 'role', 'is_staff')
     fields = (
         ('username', 'email'), ('first_name', 'last_name'),
         'role', 'password', 'is_staff', 'is_active', 'date_joined'
@@ -28,7 +28,7 @@ class CustomUserAdmin(UserAdmin):
     ordering = ('username',)
     empty_value_display = '-пусто-'
 
-    def full_name(self, obj):
+    def full_name_user(self, obj):
         full_name = '%s %s' % (obj.first_name, obj.last_name)
         return full_name.strip()
-    full_name.short_description = 'Имя пользователя'
+    full_name_user.short_description = 'Имя пользователя'

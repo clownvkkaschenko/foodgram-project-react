@@ -3,16 +3,13 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '77@^45f0salz5sqkwc@4#sgf0z21&+hi)19-z%ik%e3h93y-r6'
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = []
 
 
-# Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -70,7 +67,6 @@ DATABASES = {
 }
 
 
-# Password validation
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -86,7 +82,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
 
 LANGUAGE_CODE = 'en-us'
 
@@ -101,7 +96,7 @@ USE_TZ = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
-# Пагинация
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication'
@@ -124,10 +119,9 @@ DJOSER = {
     'HIDE_USERS': False
 }
 
-# Users
+
 AUTH_USER_MODEL = 'users.CustomUser'
 
-# Static files (CSS, JavaScript, Images)
 
 STATIC_URL = '/static/'
 

@@ -9,7 +9,6 @@ router = SimpleRouter()
 
 router.register('tags', TagViewSet, basename='tags')
 router.register('recipes', RecipeViewSet, basename='recipes')
-# router.register('users', UserViewSet, basename='users')
 router.register('ingredients', IngredientViewSet, basename='ingredients')
 
 urlpatterns = [
