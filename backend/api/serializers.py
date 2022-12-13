@@ -85,18 +85,21 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return user.purchases.filter(id=obj.id).exists()
 
+    def create_or_update_ingredients(self, instance, ingredients):
+        for ingredient in ingredients:
+            QuantityOfIngredients.objects.create(
+                recipe=instance,
+                ingredient_id=ingredient.get('id'),
+                amount=ingredient.get('amount')
+            )
+
     def create(self, validated_data):
         image = validated_data.pop('image')
         ingredients_data = self.initial_data.get('ingredients')
         recipe = Recipe.objects.create(image=image, **validated_data)
         tags_data = self.initial_data.get('tags')
         recipe.tag.set(tags_data)
-        for ingredient_data in ingredients_data:
-            QuantityOfIngredients.objects.create(
-                recipe=recipe,
-                ingredient_id=ingredient_data.get('id'),
-                amount=ingredient_data.get('amount')
-            )
+        self.create_or_update_ingredients(recipe, ingredients_data)
         return recipe
 
     def update(self, recipe, validated_data):
@@ -114,11 +117,6 @@ class RecipeSerializer(serializers.ModelSerializer):
             QuantityOfIngredients.objects.filter(recipe=recipe).all().delete()
 
             ingredients_data = self.initial_data.get('ingredients')
-            for ingredient_data in ingredients_data:
-                QuantityOfIngredients.objects.create(
-                    recipe=recipe,
-                    ingredient_id=ingredient_data.get('id'),
-                    amount=ingredient_data.get('amount')
-                )
+            self.create_or_update_ingredients(recipe, ingredients_data)
         recipe.save()
         return recipe
