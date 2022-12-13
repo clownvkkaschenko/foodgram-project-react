@@ -7,7 +7,7 @@ from foodgram.constants import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_EMAILFIELD,
 class CustomUser(AbstractUser):
     """Кастомная модель юзеров, которая основана на модели «AbstractUser».
 
-    Поля модели(являются обязательными, кроме последнего):
+    Поля модели(являются обязательными, кроме «subscriber»):
       - email: электронная почта пользователя.
       - role: роль пользователя на сайте(по умолчанию «user»),
               изменить роль может только админ сайта.

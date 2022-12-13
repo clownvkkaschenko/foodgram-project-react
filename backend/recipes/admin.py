@@ -34,7 +34,7 @@ class RecipeAdmin(ModelAdmin):
     list_display = ('name', 'author')
     fields = (
         ('name', 'cooking_time'), 'author', 'tag',
-        'description', ('image', 'preview')
+        'text', 'image', 'preview'
     )
     search_fields = ('name', 'author')
     list_filter = ('author__username', 'name', 'tag__name')

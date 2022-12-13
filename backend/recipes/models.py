@@ -3,9 +3,9 @@
 Модели:
   - Ingredient(строка-19): Модель ингредиентов и их единицы измерения.
   - Tag(строка-48): Модель тегов для рецептов.
-  - Recipe(строка-67): Основная модель приложения, для создания и
+  - Recipe(строка-77): Основная модель приложения, для создания и
                        описания рецептов.
-  - QuantityOfIngredients(строка-125): Промежуточная модель количества
+  - QuantityOfIngredients(строка-146): Промежуточная модель количества
                                        ингредиентов в блюде.
 """
 from colorfield.fields import ColorField
@@ -17,11 +17,11 @@ from users.models import CustomUser
 
 
 class Ingredient(models.Model):
-    """Модель ингридиентов и их единиц измерений.
+    """Модель ингредиентов и их единиц измерений.
 
     Поля модели(являются обязательными):
-      - name: название ингридиента
-      - measurement_unit: единица измерения ингридиента
+      - name: название ингредиента
+      - measurement_unit: единица измерения ингредиента
     """
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD, verbose_name='Название продукта'
@@ -81,7 +81,7 @@ class Recipe(models.Model):
       - author(1:М с моделью «CustomUser»): автор рецепта
       - name: название блюда
       - image: фото блюда
-      - description: описание рецепта
+      - text: описание рецепта
       - ingredient(M2M с моделью «Ingredient»): продукты для приготовления
                                                 блюда
       - tag(M2M с моделью «Tag»): теги рецепта
@@ -100,7 +100,7 @@ class Recipe(models.Model):
     image = models.ImageField(
         upload_to='recipes/', verbose_name='Фотография блюда'
     )
-    description = models.TextField(
+    text = models.TextField(
         max_length=MAX_LENGTH_TEXTFIELD,
         verbose_name='Текстовое описание рецепта'
     )
@@ -149,7 +149,7 @@ class QuantityOfIngredients(models.Model):
     Имеет отношение «one-to-many» с моделями «Ingredient» и «Recipe».
     И определяет одно дополнительное поле «amount».
     Поля модели:
-      - ingredient(1:M с моделью «Ingredient»): ингридиенты для блюда
+      - ingredient(1:M с моделью «Ingredient»): ингредиенты для блюда
       - recipe(1:M с моделью «Recipe»): рецепт блюда
       - amount: количество ингридиентов в блюде
     """
@@ -162,7 +162,7 @@ class QuantityOfIngredients(models.Model):
         related_name='ingredients', verbose_name='Рецепты'
     )
     amount = models.PositiveSmallIntegerField(
-        verbose_name='Количество ингридиентов',
+        verbose_name='Количество ингредиентов',
         validators=[
             MinValueValidator(
                 MIN_VALUE_INTEGERFIELD,
@@ -178,8 +178,8 @@ class QuantityOfIngredients(models.Model):
                 name='%(app_label)s_%(class)s_unique_ingredient'
             )
         ]
-        verbose_name = 'Ингридиент'
-        verbose_name_plural = 'Количество ингридиентов'
+        verbose_name = 'Ингредиент'
+        verbose_name_plural = 'Количество ингредиентов'
 
     def __str__(self):
         return f'{self.ingredient} - {self.amount}шт. для {self.recipe}'

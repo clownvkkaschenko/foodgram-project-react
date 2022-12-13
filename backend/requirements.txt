@@ -8,4 +8,5 @@ djoser==2.1.0
 djangorestframework==3.14.0
 djangorestframework-simplejwt==4.8.0
 django-filter==22.1
-django-base64field==1.0
+django-extra-fields==3.0.2
+psycopg2-binary==2.9.5

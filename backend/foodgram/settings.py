@@ -2,7 +2,6 @@ import os
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 SECRET_KEY = '77@^45f0salz5sqkwc@4#sgf0z21&+hi)19-z%ik%e3h93y-r6'
 
 DEBUG = True
@@ -82,6 +81,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = 'users.CustomUser'
+
 
 LANGUAGE_CODE = 'en-us'
 
@@ -118,9 +119,6 @@ DJOSER = {
     },
     'HIDE_USERS': False
 }
-
-
-AUTH_USER_MODEL = 'users.CustomUser'
 
 
 STATIC_URL = '/static/'
