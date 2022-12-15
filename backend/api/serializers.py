@@ -46,6 +46,13 @@ class IngredientSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'measurement_unit')
 
 
+class FavoriteSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Recipe
+        fields = ('id', 'name', 'image', 'cooking_time')
+
+
 class QuantityOfIngredientsSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField(source='ingredient.id')
     name = serializers.ReadOnlyField(source='ingredient.name')
@@ -85,8 +92,8 @@ class RecipeSerializer(serializers.ModelSerializer):
             return False
         return user.purchases.filter(id=obj.id).exists()
 
-    def create_or_update_ingredients(self, instance, ingredients):
-        for ingredient in ingredients:
+    def create_or_update_ingredients(self, instance, validated_data):
+        for ingredient in validated_data:
             QuantityOfIngredients.objects.create(
                 recipe=instance,
                 ingredient_id=ingredient.get('id'),

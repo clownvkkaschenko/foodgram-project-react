@@ -23,8 +23,8 @@ class CustomUserAdmin(UserAdmin):
          )
     )
     fieldsets = []
-    search_fields = ('username',)
-    list_filter = ('username', 'email')
+    list_filter = []
+    search_fields = ('username', 'email')
     ordering = ('username',)
     empty_value_display = '-пусто-'
 
