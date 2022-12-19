@@ -31,7 +31,7 @@ class TagAdmin(ModelAdmin):
 
 @register(Recipe)
 class RecipeAdmin(ModelAdmin):
-    list_display = ('name', 'author')
+    list_display = ('name', 'author', 'cnt_fav', 'cnt_shop')
     fields = (
         ('name', 'cooking_time'), 'author', 'tag',
         'text', 'image', 'preview'
@@ -48,3 +48,11 @@ class RecipeAdmin(ModelAdmin):
         return mark_safe(
             f'<img src="{obj.image.url}" style="max-height: 200px">'
         )
+
+    def cnt_fav(self, obj):
+        return obj.favorite.count()
+    cnt_fav.short_description = 'В избранном'
+
+    def cnt_shop(self, obj):
+        return obj.purchase.count()
+    cnt_shop.short_description = 'В корзине'

@@ -12,7 +12,8 @@ from colorfield.fields import ColorField
 from django.core.validators import MinValueValidator
 from django.db import models
 from foodgram.constants import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_HEX_CODE,
-                                MAX_LENGTH_TEXTFIELD, MIN_VALUE_INTEGERFIELD)
+                                MAX_LENGTH_NAME_RECIPE, MAX_LENGTH_TEXTFIELD,
+                                MIN_VALUE_INTEGERFIELD)
 from users.models import CustomUser
 
 
@@ -95,7 +96,7 @@ class Recipe(models.Model):
         related_name='recipes', verbose_name='Автор публикации'
     )
     name = models.CharField(
-        max_length=MAX_LENGTH_CHARFIELD, verbose_name='Название блюда'
+        max_length=MAX_LENGTH_NAME_RECIPE, verbose_name='Название блюда'
     )
     image = models.ImageField(
         upload_to='recipes/', verbose_name='Фотография блюда'
