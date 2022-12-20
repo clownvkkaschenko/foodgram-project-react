@@ -65,26 +65,35 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
     def get_queryset(self):
         queryset = self.queryset
         user = self.request.user
-        if user.is_anonymous:
-            return queryset
         tags = self.request.query_params.getlist('tags')
         author = self.request.query_params.get('author')
-        is_favorited = self.request.query_params.get('is_favorited')
-        is_in_shopping_cart = self.request.query_params.get(
-            'is_in_shopping_cart'
-        )
+
         if tags:
             queryset = queryset.filter(tag__slug__in=tags)
         elif author:
             queryset = queryset.filter(author=author)
-        elif is_favorited == 1:
-            queryset = queryset.filter(favorite=user.id)
-        elif is_favorited == 0:
-            queryset = queryset.exclude(favorite=user.id)
-        if is_in_shopping_cart == 1:
-            queryset = queryset.filter(purchase=user.id)
-        elif is_in_shopping_cart == 0:
-            queryset = queryset.exclude(purchase=user.id)
+
+        if user.is_anonymous:
+            return queryset
+
+        is_favorited = self.request.query_params.get('is_favorited')
+        is_in_shopping_cart = self.request.query_params.get(
+            'is_in_shopping_cart'
+        )
+        query = [
+            {
+                '1': queryset.filter(favorite=user.id),
+                '0': queryset.exclude(favorite=user.id)
+            },
+            {
+                '1': queryset.filter(purchase=user.id),
+                '0': queryset.exclude(purchase=user.id)
+            }
+        ]
+        if is_favorited:
+            queryset = query[0][is_favorited]
+        elif is_in_shopping_cart:
+            queryset = query[1][is_in_shopping_cart]
         return queryset
 
     @action(methods=['POST', 'DELETE'], pagination_class=None,
@@ -108,14 +117,15 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
             recipe__in=(user.purchases.values('id'))
         ).values(
             ingredients=F('ingredient__name'),
-            measurement=F('ingredient__measurement_unit')
-        ).annotate(amount=Sum('amount'))
+            measurement=F('ingredient__measurement_unit'),
+        ).annotate(amount=Sum('amount'), recept=F('recipe__name'))
 
         purchases = list()
         for ingredient in ingredients:
             purchases += (
                 f'{ingredient["ingredients"]}: '
-                f'{ingredient["amount"]} {ingredient["measurement"]}\n'
+                f'{ingredient["amount"]} {ingredient["measurement"]} '
+                f'на {ingredient["recept"]}\n'
             )
         response = HttpResponse(purchases, content_type='text.txt')
         filename = 'Spisok_pokupok.txt'

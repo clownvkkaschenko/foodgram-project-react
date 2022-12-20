@@ -1,5 +1,9 @@
 import os
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '77@^45f0salz5sqkwc@4#sgf0z21&+hi)19-z%ik%e3h93y-r6'
@@ -58,13 +62,23 @@ TEMPLATES = [
 WSGI_APPLICATION = 'foodgram.wsgi.application'
 
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+#         'NAME': os.getenv('DB_NAME', 'postgres'),
+#         'USER': os.getenv('POSTGRES_USER', 'postgres'),
+#         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'password'),
+#         'HOST': os.getenv('DB_HOST', 'db'),
+#         'PORT': os.getenv('DB_PORT', '5432')
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
-
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -121,7 +135,8 @@ DJOSER = {
 }
 
 
-STATIC_URL = '/static/'
+STATIC_URL = '/static_web/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_web')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

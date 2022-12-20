@@ -9,7 +9,7 @@
                                        ингредиентов в блюде.
 """
 from colorfield.fields import ColorField
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.db import models
 from foodgram.constants import (MAX_LENGTH_CHARFIELD, MAX_LENGTH_HEX_CODE,
                                 MAX_LENGTH_NAME_RECIPE, MAX_LENGTH_TEXTFIELD,
@@ -56,11 +56,13 @@ class Tag(models.Model):
     """
     name = models.CharField(
         max_length=MAX_LENGTH_CHARFIELD, unique=True,
-        verbose_name='Название тега'
+        verbose_name='Название тега',
+        validators=[RegexValidator(r'[а-яА-Я]')]
     )
     color = ColorField(
         max_length=MAX_LENGTH_HEX_CODE, unique=True,
-        default='#000000', verbose_name='Цвет тега'
+        default='#000000', verbose_name='Цвет тега',
+        validators=[RegexValidator(r'^#([A-Fa-f0-9]{6})$')]
     )
     slug = models.SlugField(
         max_length=MAX_LENGTH_CHARFIELD, unique=True,

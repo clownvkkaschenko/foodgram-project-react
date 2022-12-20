@@ -1,4 +1,5 @@
 from api.helpers import Helper
+from django.db import transaction
 from drf_extra_fields.fields import Base64ImageField
 from recipes.models import Ingredient, QuantityOfIngredients, Recipe, Tag
 from rest_framework.serializers import (ModelSerializer, ReadOnlyField,
@@ -85,24 +86,31 @@ class RecipeSerializer(ModelSerializer, Helper):
             raise ValidationError(
                 {'ingredients': 'Убедитесь, что добавили хотя-бы 1 ингредиент'}
             )
-        errors = []
+        errors = list()
         added_ingredients = list()
-        for ingredient in ingredients:
-            if int(ingredient['amount']) < 1:
-                errors.append(
-                    'Убедитесь, что в поле amount указано число больше 0'
-                )
-            elif ingredient['id'] in added_ingredients:
-                errors.append(
-                    'Убедитесь, что не добавили одинаковые ингридиенты'
-                )
-            added_ingredients.append(ingredient['id'])
+        try:
+            for ingredient in ingredients:
+                if int(ingredient['amount']) < 1:
+                    errors.append(
+                        'Убедитесь, что в поле amount указано число больше 0'
+                    )
+                elif ingredient['id'] in added_ingredients:
+                    errors.append(
+                        'Убедитесь, что не добавили одинаковые ингредиенты'
+                    )
+                added_ingredients.append(ingredient['id'])
+        except KeyError:
+            raise ValidationError(
+                {'ingredients': 'Убедитесь, что правильно назвали поля '
+                                'для обозначения ингредиента'}
+            )
         if errors:
             raise ValidationError({'ingredients': errors})
         data['ingredients'] = ingredients
         data['tags'] = tags
         return data
 
+    @transaction.atomic
     def create(self, validated_data):
         """Метод для создания рецепта.
 
@@ -114,26 +122,31 @@ class RecipeSerializer(ModelSerializer, Helper):
             - text": описание рецепта
             - cooking_time: время приготовления (в минутах)
         """
-        image = validated_data.pop('image')
         ingredients_data = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
-        recipe = Recipe.objects.create(image=image, **validated_data)
+        recipe = Recipe.objects.create(**validated_data)
         recipe.tag.set(tags_data)
         self.create_or_update_ingredients(recipe, ingredients_data)
         return recipe
 
+    @transaction.atomic
     def update(self, recipe, validated_data):
         """Метод для обновления рецепта."""
-        recipe.tag.clear()
-        recipe.tag.set(validated_data.pop('tags'))
         recipe.image = validated_data.get('image', recipe.image)
         recipe.name = validated_data.get('name', recipe.name)
         recipe.text = validated_data.get('name', recipe.text)
-        QuantityOfIngredients.objects.filter(recipe=recipe).delete()
-        ingredients_data = validated_data.pop('ingredients')
-        self.create_or_update_ingredients(recipe, ingredients_data)
         recipe.cooking_time = validated_data.get(
             'cooking_time', recipe.cooking_time
         )
+        try:
+            recipe.tag.clear()
+            recipe.tag.set(validated_data.pop('tags'))
+            QuantityOfIngredients.objects.filter(recipe=recipe).delete()
+            ingredients_data = validated_data.pop('ingredients')
+            self.create_or_update_ingredients(recipe, ingredients_data)
+        except KeyError:
+            raise ValidationError(
+                {'ingredients': 'Убедитесь, что написали все необходимые поля'}
+            )
         recipe.save()
         return recipe
