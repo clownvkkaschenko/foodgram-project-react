@@ -1,2 +1,2 @@
 # praktikum_new_diplom
-foodgram6
+foodgram7
