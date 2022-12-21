@@ -27,7 +27,7 @@ class Helper:
         if self.request.method == 'POST' and not validate_pattern:
             instance.add(pattern)
             return Response(serializer.data, status=HTTP_201_CREATED)
-        elif self.request.method == 'DELETE' and validate_pattern:
+        if self.request.method == 'DELETE' and validate_pattern:
             instance.remove(pattern)
             return Response(status=HTTP_204_NO_CONTENT)
         return Response(status=HTTP_400_BAD_REQUEST)

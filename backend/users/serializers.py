@@ -59,7 +59,7 @@ class SubscribeSerializer(ModelSerializer):
                   'last_name', 'is_subscribed', 'recipes', 'recipes_count')
 
     @receiver(m2m_changed, sender=CustomUser.subscriber.through)
-    def prevent_subscribing_yourself(sender, instance, action, reverse,
+    def prevent_subscribing_yourself(self, instance, action, reverse,
                                      model, pk_set, **kwargs):
         """Обработчик сигнала для подписок на пользователей.
 

@@ -82,7 +82,7 @@ class RecipeSerializer(ModelSerializer, Helper):
             raise ValidationError(
                 {'tags': 'Убедитесь, что добавили хотя-бы 1 тег'}
             )
-        elif not ingredients:
+        if not ingredients:
             raise ValidationError(
                 {'ingredients': 'Убедитесь, что добавили хотя-бы 1 ингредиент'}
             )
