@@ -39,7 +39,6 @@ class RecipeAdmin(ModelAdmin):
     search_fields = ('name', 'author')
     list_filter = ('author__username', 'name', 'tag__name')
     readonly_fields = ('preview',)
-    ordering = ('name',)
     raw_id_fields = ('author',)
     inlines = (QuantityOfIngredientsInline,)
     filter_horizontal = ('tag',)

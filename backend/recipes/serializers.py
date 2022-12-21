@@ -122,9 +122,10 @@ class RecipeSerializer(ModelSerializer, Helper):
             - text": описание рецепта
             - cooking_time: время приготовления (в минутах)
         """
+        image = validated_data.pop('image')
         ingredients_data = validated_data.pop('ingredients')
         tags_data = validated_data.pop('tags')
-        recipe = Recipe.objects.create(**validated_data)
+        recipe = Recipe.objects.create(image=image, **validated_data)
         recipe.tag.set(tags_data)
         self.create_or_update_ingredients(recipe, ingredients_data)
         return recipe
@@ -134,19 +135,14 @@ class RecipeSerializer(ModelSerializer, Helper):
         """Метод для обновления рецепта."""
         recipe.image = validated_data.get('image', recipe.image)
         recipe.name = validated_data.get('name', recipe.name)
-        recipe.text = validated_data.get('name', recipe.text)
+        recipe.text = validated_data.get('text', recipe.text)
         recipe.cooking_time = validated_data.get(
             'cooking_time', recipe.cooking_time
         )
-        try:
-            recipe.tag.clear()
-            recipe.tag.set(validated_data.pop('tags'))
-            QuantityOfIngredients.objects.filter(recipe=recipe).delete()
-            ingredients_data = validated_data.pop('ingredients')
-            self.create_or_update_ingredients(recipe, ingredients_data)
-        except KeyError:
-            raise ValidationError(
-                {'ingredients': 'Убедитесь, что написали все необходимые поля'}
-            )
+        recipe.tag.clear()
+        recipe.tag.set(validated_data.pop('tags'))
+        QuantityOfIngredients.objects.filter(recipe=recipe).delete()
+        ingredients_data = validated_data.pop('ingredients')
+        self.create_or_update_ingredients(recipe, ingredients_data)
         recipe.save()
         return recipe

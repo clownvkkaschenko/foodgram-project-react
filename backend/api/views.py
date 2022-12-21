@@ -64,22 +64,15 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
 
     def get_queryset(self):
         queryset = self.queryset
-        user = self.request.user
         tags = self.request.query_params.getlist('tags')
-        author = self.request.query_params.get('author')
-
         if tags:
-            queryset = queryset.filter(tag__slug__in=tags)
-        elif author:
+            queryset = queryset.filter(tag__slug__in=tags).distinct()
+        author = self.request.query_params.get('author')
+        if author:
             queryset = queryset.filter(author=author)
-
+        user = self.request.user
         if user.is_anonymous:
             return queryset
-
-        is_favorited = self.request.query_params.get('is_favorited')
-        is_in_shopping_cart = self.request.query_params.get(
-            'is_in_shopping_cart'
-        )
         query = [
             {
                 '1': queryset.filter(favorite=user.id),
@@ -90,6 +83,10 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
                 '0': queryset.exclude(purchase=user.id)
             }
         ]
+        is_favorited = self.request.query_params.get('is_favorited')
+        is_in_shopping_cart = self.request.query_params.get(
+            'is_in_shopping_cart'
+        )
         if is_favorited:
             queryset = query[0][is_favorited]
         elif is_in_shopping_cart:
@@ -117,15 +114,16 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
             recipe__in=(user.purchases.values('id'))
         ).values(
             ingredients=F('ingredient__name'),
-            measurement=F('ingredient__measurement_unit'),
-        ).annotate(amount=Sum('amount'), recept=F('recipe__name'))
+            measurement=F('ingredient__measurement_unit')
+        ).annotate(
+            amount=Sum('amount')
+        )
 
         purchases = list()
         for ingredient in ingredients:
             purchases += (
                 f'{ingredient["ingredients"]}: '
-                f'{ingredient["amount"]} {ingredient["measurement"]} '
-                f'на {ingredient["recept"]}\n'
+                f'{ingredient["amount"]} {ingredient["measurement"]}\n'
             )
         response = HttpResponse(purchases, content_type='text.txt')
         filename = 'Spisok_pokupok.txt'
