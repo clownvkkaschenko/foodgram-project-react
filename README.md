@@ -1,9 +1,10 @@
 # Foodgram Project «Продуктовый помощник»
 ![](https://github.com/clownvkkaschenko/foodgram-project-react/actions/workflows/main.yml/badge.svg)
+# Описание проекта:
 Проект Foodgram позволяет пользователям публиковать свои рецепты. Так же пользователи могут подписываться на других авторов, добавлять рецепты в избранное или список покупок.
-Проект  доступен по [адресу](http://130.193.40.135).
+Проект  доступен по адресу - http://130.193.40.135
 # Запуск проекта на локальном компьютере:
-Клонируйте репозиторий и перейти в корневую папку:
+Клонируйте репозиторий и перейдите в корневую папку:
 ```
 git@github.com:clownvkkaschenko/foodgram-project-react.git
 ```
@@ -27,10 +28,6 @@ POSTGRES_PASSWORD=password
     build: 
       context: ../backend 
       dockerfile: Dockerfile
-В образе frontend:
-    build: 
-      context: ../frontend 
-      dockerfile: Dockerfile 
 ```
 Перейдите в папку infra и запустите docker-compose:
 ```
@@ -47,14 +44,13 @@ POSTGRES_PASSWORD=password
 Теперь проект доступен по адресу: http://127.0.0.1
 Документация API к проекту доступна по адресу: http://127.0.0.1/api/docs/
 # Запуск проекта на сервере:
-Войдите на свой удаленный сервер в облаке
-Установите docker и docker-compose:
+Войдите на свой удаленный сервер в облаке, установите docker и docker-compose:
 ```
 ~$ sudo apt install docker.io
 ~$ sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 ~$ sudo chmod +x /usr/local/bin/docker-compose
 ```
-На вашем компьютере измените IP адрес для запуска проекта на IP вашего сервера:
+На вашем компьютере измените IP-адрес, на котором работает проект, на IP-вашего сервера:
 ```
 В папке infra/nginx.conf(server_name)
 ```
@@ -116,8 +112,7 @@ TELEGRAM_TOKEN - токен бота, который будет отправля
 - запускать контейнер
 - при успешном завершении тестирования произойдёт отправка уведомления в Telegram о том, что процесс деплоя успешно завершился
 # Стек технологий:
-![python-version](https://img.shields.io/static/v1?label=Python&message=3.7.9&color=brightgreen) ![django-version](https://img.shields.io/static/v1?label=Django&message=3.2.16&color=brightgreen) ![DRF-version](https://img.shields.io/static/v1?label=DjangoRestFramework&message=3.14.0&color=brightgreen)
-![postgres](https://img.shields.io/static/v1?label=&message=PostgreSQL&color=grey) ![nginx](https://img.shields.io/static/v1?label=&message=Nginx&color=grey) ![Docker](https://img.shields.io/static/v1?label=&message=Docker&color=grey) ![Yandex-cloud](https://img.shields.io/static/v1?label=&message=YandexCloud&color=grey) ![GitHubActions](https://img.shields.io/static/v1?label=&message=GitHubActions&color=grey)
+![python-version](https://img.shields.io/static/v1?label=Python&message=3.7.9&color=brightgreen) ![django-version](https://img.shields.io/static/v1?label=Django&message=3.2.16&color=brightgreen) ![DRF-version](https://img.shields.io/static/v1?label=DjangoRestFramework&message=3.14.0&color=brightgreen) ![postgres](https://img.shields.io/static/v1?label=&message=PostgreSQL&color=grey) ![nginx](https://img.shields.io/static/v1?label=&message=Nginx&color=grey) ![Docker](https://img.shields.io/static/v1?label=&message=Docker&color=grey) ![Yandex-cloud](https://img.shields.io/static/v1?label=&message=YandexCloud&color=grey) ![GitHubActions](https://img.shields.io/static/v1?label=&message=GitHubActions&color=grey)
 # Авторы:
-Backend: Иван Конышкин
-Frontend: YandexPracticum
+- Backend: Иван Конышкин
+- Frontend: YandexPracticum
