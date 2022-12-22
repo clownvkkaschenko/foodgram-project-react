@@ -1,9 +1,6 @@
-from django.db.models.signals import m2m_changed
-from django.dispatch import receiver
 from djoser.serializers import UserCreateSerializer, UserSerializer
 from recipes.models import Recipe
-from rest_framework.serializers import (ModelSerializer, SerializerMethodField,
-                                        ValidationError)
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
 
 from .models import CustomUser
 
@@ -47,7 +44,7 @@ class FavoriteAndPurchaseSerializer(ModelSerializer):
         fields = ('id', 'name', 'image', 'cooking_time')
 
 
-class SubscribeSerializer(ModelSerializer):
+class SubscribeSerializer(UserSerializer):
     """Сериализатор для информации о юзерах на которых оформлена подписка."""
     is_subscribed = SerializerMethodField()
     recipes_count = SerializerMethodField()
@@ -57,19 +54,6 @@ class SubscribeSerializer(ModelSerializer):
         model = CustomUser
         fields = ('email', 'id', 'username', 'first_name',
                   'last_name', 'is_subscribed', 'recipes', 'recipes_count')
-
-    @receiver(m2m_changed, sender=CustomUser.subscriber.through)
-    def prevent_subscribing_yourself(self, instance, action, reverse,
-                                     model, pk_set, **kwargs):
-        """Обработчик сигнала для подписок на пользователей.
-
-        Обработчик не разрешает пользователям подписываться на себя.
-        """
-        if action == 'pre_add':
-            if instance.pk in pk_set:
-                raise ValidationError(
-                    {'subscriber': 'Вы не можете подписаться на себя'}
-                )
 
     def get_is_subscribed(self, obj):
         return True
