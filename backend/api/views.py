@@ -12,6 +12,7 @@ from users.serializers import (FavoriteAndPurchaseSerializer,
                                SubscribeSerializer)
 
 from .helpers import Helper
+from .paginations import PageNumberLimitPagination
 from .permissions import IsOwnerOrReadonlyPermission
 
 
@@ -57,6 +58,7 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
     permission_classes = (IsOwnerOrReadonlyPermission,)
+    pagination_class = PageNumberLimitPagination
     additional_serializer = FavoriteAndPurchaseSerializer
 
     def perform_create(self, serializer):
