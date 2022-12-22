@@ -50,7 +50,7 @@ class SubscribeUserViewSet(UserViewSet, Helper):
             permission_classes=(IsAuthenticated,), detail=True)
     def subscribe(self, request, id):
         """Метод для подписки/отписки от пользователя."""
-        return self.post_or_delete(id, request.user.subscribers)
+        return self.post_or_delete(id, request.user.subscribe)
 
 
 class RecipeViewSet(viewsets.ModelViewSet, Helper):
