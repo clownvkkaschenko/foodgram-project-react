@@ -41,7 +41,7 @@ class CustomUser(AbstractUser):
         verbose_name='Фамилия юзера'
     )
     subscriber = models.ManyToManyField(
-        'self', symmetrical=False,
+        to='self', symmetrical=False,
         related_name='subscribers', verbose_name='Подписки юзера'
     )
 
