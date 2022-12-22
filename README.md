@@ -1,2 +1,2 @@
-# praktikum_new_diplom
-foodgram6
+# Foodgram Project
+![](https://github.com/clownvkkaschenko/foodgram-project-react/actions/workflows/main.yml/badge.svg)

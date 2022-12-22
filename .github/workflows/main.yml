@@ -44,7 +44,7 @@ jobs:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
+          tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:v1
 
   build_and_push_frontend_to_docker_hub:
     name: Push Docker Frontend image to Docker Hub
@@ -85,7 +85,7 @@ jobs:
         passphrase: ${{ secrets.PASSPHRASE }}
         script: |
             sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_frontend:latest
-            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:latest
+            sudo docker pull ${{ secrets.DOCKER_USERNAME }}/foodgram_backend:v1
             sudo docker-compose stop
             sudo docker-compose rm web
             rm .env
