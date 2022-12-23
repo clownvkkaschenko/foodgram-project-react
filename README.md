@@ -14,9 +14,9 @@ Cоздайте файл .env в папке infra. Заполните этот �
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=postgres
 POSTGRES_USER=postgres
-DB_HOST=db
+POSTGRES_PASSWORD=foodgram_password
+DB_HOST=127.0.0.1
 DB_PORT=5432
-POSTGRES_PASSWORD=password
 ```
 На вашем компьютере измените IP адрес для запуска проекта на IP «127.0.0.1»:
 ```
@@ -34,13 +34,13 @@ POSTGRES_PASSWORD=password
 ```
 ~$ docker-compose up -d --build
 ```
-Теперь в контейнере web нужно выполнить миграции, создать суперпользователя, собрать статику и загрузить ингредиенты в БД из подготовленного csv файла:
+Теперь в контейнере web нужно выполнить миграции, создать суперпользователя, собрать статику и, по желанию, загрузить подготовленные данные в БД из json файла:
 ```
 ~$ docker-compose exec web python manage.py makemigrations
 ~$ docker-compose exec web python manage.py migrate
 ~$ docker-compose exec web python manage.py createsuperuser
 ~$ docker-compose exec web python manage.py collectstatic --no-input
-~$ docker-compose exec web python manage.py load_csv
+~$ docker-compose exec web python manage.py loaddata db.json
 ```
 Теперь проект доступен по адресу: http://127.0.0.1
 Документация API к проекту доступна по адресу: http://127.0.0.1/api/docs/
@@ -66,9 +66,9 @@ scp -r docs/ <ваш_username>@<host>:/home/<ваш_username>/docs/
 DB_ENGINE=django.db.backends.postgresql
 DB_NAME=postgres
 POSTGRES_USER=postgres
+POSTGRES_PASSWORD=foodgram_password
 DB_HOST=db
 DB_PORT=5432
-POSTGRES_PASSWORD=password
 ```
 Запустите docker-compose:
 ```
@@ -78,13 +78,13 @@ POSTGRES_PASSWORD=password
 ```
 ~$ sudo docker exec -it <название_контейнера> bash
 ```
-После чего нужно выполнить миграции, создать суперпользователя, собрать статику и загрузить ингредиенты в БД из подготовленного csv файла:
+После чего нужно выполнить миграции, создать суперпользователя, собрать статику и, по желанию, загрузить подготовленные данные в БД из json файла:
 ```
 ~$ sudo docker-compose exec web python manage.py makemigrations
 ~$ sudo docker-compose exec web python manage.py migrate
 ~$ sudo docker-compose exec web python manage.py createsuperuser
 ~$ sudo docker-compose exec web python manage.py collectstatic --no-input
-~$ sudo docker-compose exec web python manage.py load_csv
+~$ sudo docker-compose exec web python manage.py loaddata db.json
 ```
 Теперь проект будет работать на вашем IP адресе.
 # GitHub Actions:
