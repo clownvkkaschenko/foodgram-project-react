@@ -118,14 +118,15 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
             ingredients=F('ingredient__name'),
             measurement=F('ingredient__measurement_unit')
         ).annotate(
-            amount=Sum('amount')
+            amount=Sum('amount'), recept=F('recipe__name')
         )
 
         purchases = list()
         for ingredient in ingredients:
             purchases += (
                 f'{ingredient["ingredients"]}: '
-                f'{ingredient["amount"]} {ingredient["measurement"]}\n'
+                f'{ingredient["amount"]} {ingredient["measurement"]} '
+                f'на {ingredient["recept"]}\n'
             )
         response = HttpResponse(purchases, content_type='text.txt')
         filename = 'Spisok_pokupok.txt'
