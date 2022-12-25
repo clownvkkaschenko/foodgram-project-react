@@ -56,6 +56,8 @@ DB_PORT=5432
 В папке infra/nginx.conf(server_name)
 В папке backend/foodgram/setting.py(ALLOWED_HOSTS)
 ```
+Создайте образ для бекенда с обновлённым IP-адресом и запушьте его на DockerHub.
+В файле docker-compose.yml измените образ web, так что-бы он пулился с вашего DockerHub.  
 На вашем компьютере перейдите в папку infra и скопируйте файлы docker-compose.yml, nginx.conf и папку docs из вашего проекта на сервер:
 ```
 scp docker-compose.yml <ваш_username>@<host>:/home/<ваш_username>/docker-compose.yml
