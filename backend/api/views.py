@@ -125,8 +125,7 @@ class RecipeViewSet(viewsets.ModelViewSet, Helper):
         for ingredient in ingredients:
             purchases += (
                 f'{ingredient["ingredients"]}: '
-                f'{ingredient["amount"]} {ingredient["measurement"]} '
-                f'на {ingredient["recept"]}\n'
+                f'{ingredient["amount"]} {ingredient["measurement"]}\n'
             )
         response = HttpResponse(purchases, content_type='text.txt')
         filename = 'Spisok_pokupok.txt'
