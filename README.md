@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/YandexCloud-gray"/>
 </div>
 
-![](https://github.com/clownvkkaschenko/foodgram-project-react/actions/workflows/main.yml/badge.svg)
+<img src="https://github.com/clownvkkaschenko/FoodgramProject/actions/workflows/main.yml/badge.svg"/>
 
 Проект Foodgram позволяет пользователям публиковать свои рецепты, подписываться на других авторов и добавлять рецепты в избранное или список покупок.
 
@@ -19,7 +19,7 @@
 # Запуск проекта:
 - Клонируйте репозиторий и перейдите в него
   ```
-  git@github.com:clownvkkaschenko/foodgram-project-react.git
+  git clone git@github.com:clownvkkaschenko/FoodgramProject.git
   ```
 - Cоздайте файл .env в папке **infra** и заполните этот файл данными представленными ниже
   ```
