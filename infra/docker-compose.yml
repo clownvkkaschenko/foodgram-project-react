@@ -9,7 +9,7 @@ services:
       - .env
 
   web:
-    image: kaschenko/foodgram_backend:v1
+    image: kaschenko/foodgram_backend:v1.2
     restart: always
     volumes:
       - static_value:/app_backend/static_web/
