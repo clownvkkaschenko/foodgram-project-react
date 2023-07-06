@@ -1,15 +1,15 @@
 <div id="header" align="center">
   <h1>Foodgram Project</h1>
-  <img src="https://img.shields.io/badge/Python-3.7.9-brightgreen"/>
-  <img src="https://img.shields.io/badge/Django-3.2.16-blueviolet"/>
-  <img src="https://img.shields.io/badge/DjangoRestFramework-3.2.14-orange"/>
-  <img src="https://img.shields.io/badge/Postgres-yellow"/>
-  <img src="https://img.shields.io/badge/Docker-red"/>
-  <img src="https://img.shields.io/badge/Nginx-blue"/>
-  <img src="https://img.shields.io/badge/YandexCloud-gray"/>
+  <img src="https://img.shields.io/badge/Python-3.7.9-F8F8FF?style=for-the-badge&logo=python&logoColor=20B2AA">
+  <img src="https://img.shields.io/badge/Django-2.2.19-F8F8FF?style=for-the-badge&logo=django&logoColor=00FF00">
+  <img src="https://img.shields.io/badge/DjangoRestFramework-3.12.14-F8F8FF?style=for-the-badge&logo=django&logoColor=00FF00">
+  <img src="https://img.shields.io/badge/PostgreSQL-555555?style=for-the-badge&logo=postgresql&logoColor=F5F5DC">
+  <img src="https://img.shields.io/badge/Docker-555555?style=for-the-badge&logo=docker&logoColor=2496ED">
+  <img src="https://img.shields.io/badge/nginx-555555?style=for-the-badge&logo=nginx&logoColor=009639">
+  <a href="https://github.com/clownvkkaschenko/FoodgramProject/actions/workflows/main.yml">
+  <img src="https://img.shields.io/github/actions/workflow/status/clownvkkaschenko/FoodgramProject/main.yml?branch=master&label=FoodgramProject workflows&style=for-the-badge&color=F8F8FF&logo=githubactions&logoColor=2088FF"><a>
 </div>
 
-<img src="https://github.com/clownvkkaschenko/FoodgramProject/actions/workflows/main.yml/badge.svg"/>
 
 Проект Foodgram позволяет пользователям публиковать свои рецепты, подписываться на других авторов и добавлять рецепты в избранное или список покупок.
 
