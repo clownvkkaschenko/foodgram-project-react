@@ -19,7 +19,7 @@
 # Запуск проекта:
 - Клонируйте репозиторий и перейдите в него
   ```
-  git clone git@github.com:clownvkkaschenko/FoodgramProject.git
+  git clone git@github.com:kaschenkkko/FoodgramProject.git
   ```
 - Cоздайте файл .env в папке **infra** и заполните этот файл данными представленными ниже
   ```
